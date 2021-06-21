@@ -18,7 +18,6 @@ class Application():
         self.rightbar.place(relx=0.4,rely=0.15,relwidth=0.60,relheight=0.5)
         self.title = Label(self.topbar, fg="#ffffff",bg="#0d1117",text=self.title, font="Verdana 18 bold")
         self.title.pack(side="left")
-        self.masterApp.mainloop()
     def addContactGroup(self,groupName,groupDescription):
         with open(self.contactsFile, "r") as jsonFile:
             data = json.load(jsonFile)
@@ -69,5 +68,11 @@ class Application():
                 if data[i]['_id'] != 0:
                     contactlist = Label(self.rightbar, fg="#ffffff",bg="#0d1117",text=f"{data[i]['name']} {data[i]['surname']}", font="Verdana 12 bold")
                     contactlist.pack(side="top")
+    def help(self):
+        import webbrowser
+        webbrowser.open("https://github.com/mertssmnoglu/contacts-app/issues/new")
 app = Application()
 app.getContactList()
+addContactButton = Button(app.leftbar, text="Support", command=app.help)
+addContactButton.pack(side=BOTTOM)
+app.masterApp.mainloop()

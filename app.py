@@ -73,6 +73,6 @@ class Application():
         webbrowser.open("https://github.com/mertssmnoglu/contacts-app/issues/new")
 app = Application()
 app.getContactList()
-addContactButton = Button(app.leftbar, text="Support", command=app.help)
-addContactButton.pack(side=BOTTOM)
+helpButton = Button(app.leftbar, text="Help", command=app.help)
+helpButton.pack(side=BOTTOM)
 app.masterApp.mainloop()

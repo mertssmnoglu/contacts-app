@@ -1,0 +1,14 @@
+{
+  "contactGroups": [],
+  "defaultCountryCode": "+1",
+  "newContactId": 1,
+  "contactList": [
+    {
+      "_id": 0,
+      "name": "root",
+      "surname": "root",
+      "phoneNumber": "123456789",
+      "groups": []
+    }
+  ]
+}

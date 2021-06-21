@@ -8,6 +8,7 @@ class Application():
         self.contactsFile = "contacts.json"
         self.countriesFile = "lib/countries.json"
         self.masterApp = Tk()
+        self.masterApp.attributes('-zoomed', True)
         self.topbar = Frame(self.masterApp,bg="#0d1117")
         self.topbar.place(relx=0,rely=0,relwidth=1,relheight=0.1)
         self.dateTime = Label(self.topbar, fg="#ffffff",bg="#0d1117",text=f"{now.day} / {now.month} / {now.year}", font="Verdana 18 bold")

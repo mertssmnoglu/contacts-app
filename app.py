@@ -50,34 +50,61 @@ class Application():
         with open(self.contactsFile, "r") as jsonFile:
             data = json.load(jsonFile)
             return data["newContactId"]
-    def addNewContact(self,name,surname,phoneNumber,groups):
+    def addNewContact(self):
         contactData = {
             "_id": self.getId(),
-            "name":name,
-            "surname":surname,
-            "phoneNumber": self.getCountryCode() + phoneNumber,
-            "groups":groups
+            "name":contactNameEntry.get(),
+            "surname":contactSurnameEntry.get(),
+            "phoneNumber": self.getCountryCode() + contactPhoneEntry.get(),
+            "groups":contactGroupsEntry.get().split(sep=",")
         }
         with open(self.contactsFile, "r") as jsonFile:
             data = json.load(jsonFile)
             data["contactList"].append(contactData)
         with open(self.contactsFile, "w") as jsonFile:
             json.dump(data, jsonFile, indent=2)
-        contactBasicInfo=f"{name + ' ' + surname.upper()}"
+        contactBasicInfo=f"{contactData['name'] + ' ' + contactData['surname'].upper()}"
         self.increaseId()
         print(f"New contact {contactBasicInfo} added.")
+        self.clear_rightbar()
+        self.getContactList()
+    def clear_rightbar(self):
+        for widgets in app.rightbar.winfo_children():
+            widgets.destroy()
     def getContactList(self):
         with open(self.contactsFile, "r") as jsonFile:
             data = json.load(jsonFile)["contactList"]
-            for i in range (0,len(data)):
-                if data[i]['_id'] != 0:
-                    contactlist = Label(self.rightbar, fg="#ffffff",bg=self.primaryColor,text=f"{data[i]['name']} {data[i]['surname']}", font="Verdana 12 bold")
-                    contactlist.pack(side="top")
+            scrollbar = Scrollbar(self.rightbar)
+            scrollbar.pack( side = RIGHT, fill = Y )
+            mylist = Listbox(self.rightbar,width=100,yscrollcommand = scrollbar.set)
+            for i in range (1,len(data)):
+                mylist.insert(END, f"{data[i]['name']} {data[i]['surname']}")
+            mylist.pack()
+                        # contactlist = Label(self.rightbar, fg="#ffffff",bg=self.primaryColor,text=f"{data[i]['name']} {data[i]['surname']}", font="Verdana 12 bold")
+                        # contactlist.pack(side="top")
     def help(self):
         import webbrowser
         webbrowser.open("https://github.com/mertssmnoglu/contacts-app/issues/new")
 app = Application()
 app.getContactList()
+contactNameLabel = Label(app.leftbar, text="Enter Name:")
+contactNameLabel.pack(anchor="w")
+contactNameEntry = Entry(app.leftbar)
+contactNameEntry.pack(anchor="w")
+contactSurnameLabel = Label(app.leftbar, text="Enter Surname:")
+contactSurnameLabel.pack(anchor="w")
+contactSurnameEntry = Entry(app.leftbar)
+contactSurnameEntry.pack(anchor="w")
+contactPhoneLabel = Label(app.leftbar, text="Enter Phone Number:")
+contactPhoneLabel.pack(anchor="w")
+contactPhoneEntry = Entry(app.leftbar)
+contactPhoneEntry.pack(anchor="w")
+contactGroupsLabel = Label(app.leftbar, text="Enter Groups:")
+contactGroupsLabel.pack(anchor="w")
+contactGroupsEntry = Entry(app.leftbar)
+contactGroupsEntry.pack(anchor="w")
+addContactButton = Button(app.leftbar,text="Add Contact",command=app.addNewContact)
+addContactButton.pack(side=LEFT)
 helpButton = Button(app.footer, text="Help", command=app.help)
 helpButton.pack(side=TOP,pady="20")
 app.masterApp.mainloop()

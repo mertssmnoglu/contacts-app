@@ -20,7 +20,7 @@ class Application():
         self.rightbar = Frame(self.masterApp,bg=self.primaryColor)
         self.rightbar.place(relx=0.4,rely=0.15,relwidth=0.60,relheight=0.5)
         self.footer = Frame(self.masterApp,bg=self.primaryColor)
-        self.footer.place(relx=0,rely=0.8,relwidth=1,relheight=0.2)
+        self.footer.place(relx=0,rely=0.83,relwidth=1,relheight=0.17)
         self.title = Label(self.topbar, fg="#ffffff",bg=self.primaryColor,text=self.title, font="Verdana 18 bold")
         self.title.pack(side="left")
     def addContactGroup(self,groupName,groupDescription):
@@ -78,6 +78,6 @@ class Application():
         webbrowser.open("https://github.com/mertssmnoglu/contacts-app/issues/new")
 app = Application()
 app.getContactList()
-helpButton = Button(app.leftbar, text="Help", command=app.help)
-helpButton.pack(side=BOTTOM)
+helpButton = Button(app.footer, text="Help", command=app.help)
+helpButton.pack(side=TOP,pady="20")
 app.masterApp.mainloop()

@@ -4,20 +4,24 @@ import datetime
 now = datetime.datetime.now()
 class Application():
     def __init__(self):
+        self.primaryColor = "#0d1117"
+        self.secondaryColor = ""
         self.title ="Contacts"
         self.contactsFile = "contacts.json"
         self.countriesFile = "lib/countries.json"
         self.masterApp = Tk()
         self.masterApp.attributes('-zoomed', True)
-        self.topbar = Frame(self.masterApp,bg="#0d1117")
+        self.topbar = Frame(self.masterApp,bg=self.primaryColor)
         self.topbar.place(relx=0,rely=0,relwidth=1,relheight=0.1)
-        self.dateTime = Label(self.topbar, fg="#ffffff",bg="#0d1117",text=f"{now.day} / {now.month} / {now.year}", font="Verdana 18 bold")
+        self.dateTime = Label(self.topbar, fg="#ffffff",bg=self.primaryColor,text=f"{now.day} / {now.month} / {now.year}", font="Verdana 18 bold")
         self.dateTime.pack(side="right")
-        self.leftbar = Frame(self.masterApp,bg="#0d1117")
+        self.leftbar = Frame(self.masterApp,bg=self.primaryColor)
         self.leftbar.place(relx=0,rely=0.15,relwidth=0.35,relheight=0.5)
-        self.rightbar = Frame(self.masterApp,bg="#0d1117")
+        self.rightbar = Frame(self.masterApp,bg=self.primaryColor)
         self.rightbar.place(relx=0.4,rely=0.15,relwidth=0.60,relheight=0.5)
-        self.title = Label(self.topbar, fg="#ffffff",bg="#0d1117",text=self.title, font="Verdana 18 bold")
+        self.footer = Frame(self.masterApp,bg=self.primaryColor)
+        self.footer.place(relx=0,rely=0.8,relwidth=1,relheight=0.2)
+        self.title = Label(self.topbar, fg="#ffffff",bg=self.primaryColor,text=self.title, font="Verdana 18 bold")
         self.title.pack(side="left")
     def addContactGroup(self,groupName,groupDescription):
         with open(self.contactsFile, "r") as jsonFile:
@@ -67,7 +71,7 @@ class Application():
             data = json.load(jsonFile)["contactList"]
             for i in range (0,len(data)):
                 if data[i]['_id'] != 0:
-                    contactlist = Label(self.rightbar, fg="#ffffff",bg="#0d1117",text=f"{data[i]['name']} {data[i]['surname']}", font="Verdana 12 bold")
+                    contactlist = Label(self.rightbar, fg="#ffffff",bg=self.primaryColor,text=f"{data[i]['name']} {data[i]['surname']}", font="Verdana 12 bold")
                     contactlist.pack(side="top")
     def help(self):
         import webbrowser

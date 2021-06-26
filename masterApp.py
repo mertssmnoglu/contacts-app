@@ -71,6 +71,7 @@ class Application():
                 data["defaultCountryCode"] = str(defaultCountryCode)
             with open(self.contactsFile, "w") as jsonFile:
                 json.dump(data, jsonFile, indent=2)
+            messagebox.showinfo("Country code setted",f"Default Country Code setted {defaultCountryCode}.")
             print(f"Default Country Code setted {defaultCountryCode}.")
     def getCountryCode(self):
         with open(self.contactsFile, "r") as jsonFile:
@@ -110,6 +111,7 @@ class Application():
                 json.dump(data, jsonFile, indent=2)
             contactBasicInfo=f"{contactData['name'] + ' ' + contactData['surname'].upper()}"
             self.increaseId()
+            messagebox.showinfo("New Contact",f"New Contact {contactBasicInfo} added.")
             print(f"New contact {contactBasicInfo} added.")
             self.clear_rightbar()
             self.getContactList()

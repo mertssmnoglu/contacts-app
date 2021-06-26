@@ -26,6 +26,32 @@ class Application():
         self.footer.place(relx=0,rely=0.83,relwidth=1,relheight=0.17)
         self.title = Label(self.topbar, fg="#ffffff",bg=self.primaryColor,text=self.title, font="Verdana 18 bold")
         self.title.pack(side="left")
+        self.contactNameLabel = Label(self.leftbar, text="Enter Name:")
+        self.contactNameLabel.pack(anchor="w")
+        self.contactNameEntry = Entry(self.leftbar)
+        self.contactNameEntry.pack(anchor="w")
+        self.contactSurnameLabel = Label(self.leftbar, text="Enter Surname:")
+        self.contactSurnameLabel.pack(anchor="w")
+        self.contactSurnameEntry = Entry(self.leftbar)
+        self.contactSurnameEntry.pack(anchor="w")
+        self.contactPhoneLabel = Label(self.leftbar, text="Enter Phone Number:")
+        self.contactPhoneLabel.pack(anchor="w")
+        self.contactPhoneEntry = Entry(self.leftbar)
+        self.contactPhoneEntry.pack(anchor="w")
+        self.contactGroupsLabel = Label(self.leftbar, text="Enter Groups:")
+        self.contactGroupsLabel.pack(anchor="w")
+        self.contactGroupsEntry = Entry(self.leftbar)
+        self.contactGroupsEntry.pack(anchor="w")
+        self.setCountryCodeEntry = Entry(self.leftbar)
+        self.setCountryCodeEntry.pack(anchor="w",side=BOTTOM)
+        self.setCountryLabel = Label(self.leftbar, text="Set Default Country Code:")
+        self.setCountryLabel.pack(anchor="w",side=BOTTOM)
+        self.addContactButton = Button(self.footer,text="Add Contact",command=self.addNewContact)
+        self.addContactButton.pack(side=LEFT)
+        self.setCountryCodeButton = Button(self.footer,text="Set default country code",command=self.setDefaultCountryCode)
+        self.setCountryCodeButton.pack(side=LEFT)
+        self.helpButton = Button(self.footer, text="Help", command=self.help)
+        self.helpButton.pack(side=RIGHT,pady="20")
     def addContactGroup(self,groupName,groupDescription):
         with open(self.contactsFile, "r") as jsonFile:
             data = json.load(jsonFile)
@@ -33,7 +59,7 @@ class Application():
         with open(self.contactsFile, "w") as jsonFile:
             json.dump(data, jsonFile, indent=2)
     def setDefaultCountryCode(self):
-        defaultCountryCode = setCountryCodeEntry.get()
+        defaultCountryCode = self.setCountryCodeEntry.get()
         if defaultCountryCode == '':
             messagebox.showerror("Oops!", "Country code can not be empty.")
         elif "+" not in defaultCountryCode or len(defaultCountryCode) <= 1:
@@ -62,10 +88,10 @@ class Application():
     def addNewContact(self):
         contactData = {
             "_id": self.getId(),
-            "name":contactNameEntry.get(),
-            "surname":contactSurnameEntry.get(),
-            "phoneNumber": self.getCountryCode() + contactPhoneEntry.get(),
-            "groups":contactGroupsEntry.get().split(sep=",")
+            "name":self.contactNameEntry.get(),
+            "surname":self.contactSurnameEntry.get(),
+            "phoneNumber": self.getCountryCode() + self.contactPhoneEntry.get(),
+            "groups":self.contactGroupsEntry.get().split(sep=",")
         }
         if(contactData["groups"] == [""]):
             contactData["groups"] = []
@@ -73,7 +99,7 @@ class Application():
             messagebox.showerror("Oops!", "Name can not be empty.")
         elif(contactData["surname"] == ''):
             messagebox.showerror("Oops!", "Surname can not be empty.")
-        elif(contactPhoneEntry.get() == ''):
+        elif(self.contactPhoneEntry.get() == ''):
             messagebox.showerror("Oops!", "Phone Number can not be empty.")
         else:
             with open(self.contactsFile, "r") as jsonFile:
@@ -87,7 +113,7 @@ class Application():
             self.clear_rightbar()
             self.getContactList()
     def clear_rightbar(self):
-        for widgets in app.rightbar.winfo_children():
+        for widgets in self.rightbar.winfo_children():
             widgets.destroy()
     def getContactList(self):
         with open(self.contactsFile, "r") as jsonFile:
@@ -103,30 +129,4 @@ class Application():
         webbrowser.open("https://github.com/mertssmnoglu/contacts-app/issues/new")
 app = Application()
 app.getContactList()
-contactNameLabel = Label(app.leftbar, text="Enter Name:")
-contactNameLabel.pack(anchor="w")
-contactNameEntry = Entry(app.leftbar)
-contactNameEntry.pack(anchor="w")
-contactSurnameLabel = Label(app.leftbar, text="Enter Surname:")
-contactSurnameLabel.pack(anchor="w")
-contactSurnameEntry = Entry(app.leftbar)
-contactSurnameEntry.pack(anchor="w")
-contactPhoneLabel = Label(app.leftbar, text="Enter Phone Number:")
-contactPhoneLabel.pack(anchor="w")
-contactPhoneEntry = Entry(app.leftbar)
-contactPhoneEntry.pack(anchor="w")
-contactGroupsLabel = Label(app.leftbar, text="Enter Groups:")
-contactGroupsLabel.pack(anchor="w")
-contactGroupsEntry = Entry(app.leftbar)
-contactGroupsEntry.pack(anchor="w")
-setCountryCodeEntry = Entry(app.leftbar)
-setCountryCodeEntry.pack(anchor="w",side=BOTTOM)
-setCountryLabel = Label(app.leftbar, text="Set Default Country Code:")
-setCountryLabel.pack(anchor="w",side=BOTTOM)
-addContactButton = Button(app.footer,text="Add Contact",command=app.addNewContact)
-addContactButton.pack(side=LEFT)
-setCountryCodeButton = Button(app.footer,text="Set default country code",command=app.setDefaultCountryCode)
-setCountryCodeButton.pack(side=LEFT)
-helpButton = Button(app.footer, text="Help", command=app.help)
-helpButton.pack(side=LEFT,pady="20")
 app.masterApp.mainloop()

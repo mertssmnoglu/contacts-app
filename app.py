@@ -32,13 +32,19 @@ class Application():
             data["contactGroups"].append({"name":groupName,"description":groupDescription})
         with open(self.contactsFile, "w") as jsonFile:
             json.dump(data, jsonFile, indent=2)
-    def setDefaultCountryCode(self,countryCode="+1"):
-        with open(self.contactsFile, "r",) as jsonFile:
-            data = json.load(jsonFile)
-            data["defaultCountryCode"] = str(countryCode)
-        with open(self.contactsFile, "w") as jsonFile:
-            json.dump(data, jsonFile, indent=2)
-        print(f"Default Country Code setted {countryCode}.")
+    def setDefaultCountryCode(self):
+        defaultCountryCode = setCountryCodeEntry.get()
+        if defaultCountryCode == '':
+            messagebox.showerror("Oops!", "Country code can not be empty.")
+        elif "+" not in defaultCountryCode or len(defaultCountryCode) <= 1:
+            messagebox.showerror("Oops!", "Country code is invalid.")
+        else:
+            with open(self.contactsFile, "r",) as jsonFile:
+                data = json.load(jsonFile)
+                data["defaultCountryCode"] = str(defaultCountryCode)
+            with open(self.contactsFile, "w") as jsonFile:
+                json.dump(data, jsonFile, indent=2)
+            print(f"Default Country Code setted {defaultCountryCode}.")
     def getCountryCode(self):
         with open(self.contactsFile, "r") as jsonFile:
             countryCode = json.load(jsonFile)
@@ -113,8 +119,14 @@ contactGroupsLabel = Label(app.leftbar, text="Enter Groups:")
 contactGroupsLabel.pack(anchor="w")
 contactGroupsEntry = Entry(app.leftbar)
 contactGroupsEntry.pack(anchor="w")
-addContactButton = Button(app.leftbar,text="Add Contact",command=app.addNewContact)
+setCountryCodeEntry = Entry(app.leftbar)
+setCountryCodeEntry.pack(anchor="w",side=BOTTOM)
+setCountryLabel = Label(app.leftbar, text="Set Default Country Code:")
+setCountryLabel.pack(anchor="w",side=BOTTOM)
+addContactButton = Button(app.footer,text="Add Contact",command=app.addNewContact)
 addContactButton.pack(side=LEFT)
+setCountryCodeButton = Button(app.footer,text="Set default country code",command=app.setDefaultCountryCode)
+setCountryCodeButton.pack(side=LEFT)
 helpButton = Button(app.footer, text="Help", command=app.help)
-helpButton.pack(side=TOP,pady="20")
+helpButton.pack(side=LEFT,pady="20")
 app.masterApp.mainloop()

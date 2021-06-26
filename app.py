@@ -1,6 +1,9 @@
 import json
+import os
 from tkinter import *
+from tkinter import messagebox
 import datetime
+import time
 now = datetime.datetime.now()
 class Application():
     def __init__(self):
@@ -58,16 +61,25 @@ class Application():
             "phoneNumber": self.getCountryCode() + contactPhoneEntry.get(),
             "groups":contactGroupsEntry.get().split(sep=",")
         }
-        with open(self.contactsFile, "r") as jsonFile:
-            data = json.load(jsonFile)
-            data["contactList"].append(contactData)
-        with open(self.contactsFile, "w") as jsonFile:
-            json.dump(data, jsonFile, indent=2)
-        contactBasicInfo=f"{contactData['name'] + ' ' + contactData['surname'].upper()}"
-        self.increaseId()
-        print(f"New contact {contactBasicInfo} added.")
-        self.clear_rightbar()
-        self.getContactList()
+        if(contactData["groups"] == [""]):
+            contactData["groups"] = []
+        if(contactData["name"] == ''):
+            messagebox.showerror("Oops!", "Name can not be empty.")
+        elif(contactData["surname"] == ''):
+            messagebox.showerror("Oops!", "Surname can not be empty.")
+        elif(contactPhoneEntry.get() == ''):
+            messagebox.showerror("Oops!", "Phone Number can not be empty.")
+        else:
+            with open(self.contactsFile, "r") as jsonFile:
+                data = json.load(jsonFile)
+                data["contactList"].append(contactData)
+            with open(self.contactsFile, "w") as jsonFile:
+                json.dump(data, jsonFile, indent=2)
+            contactBasicInfo=f"{contactData['name'] + ' ' + contactData['surname'].upper()}"
+            self.increaseId()
+            print(f"New contact {contactBasicInfo} added.")
+            self.clear_rightbar()
+            self.getContactList()
     def clear_rightbar(self):
         for widgets in app.rightbar.winfo_children():
             widgets.destroy()
@@ -80,8 +92,6 @@ class Application():
             for i in range (1,len(data)):
                 mylist.insert(END, f"{data[i]['name']} {data[i]['surname']}")
             mylist.pack()
-                        # contactlist = Label(self.rightbar, fg="#ffffff",bg=self.primaryColor,text=f"{data[i]['name']} {data[i]['surname']}", font="Verdana 12 bold")
-                        # contactlist.pack(side="top")
     def help(self):
         import webbrowser
         webbrowser.open("https://github.com/mertssmnoglu/contacts-app/issues/new")

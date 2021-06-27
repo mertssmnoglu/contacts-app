@@ -10,7 +10,11 @@ git clone https://github.com/mertssmnoglu/contacts-app.git
 
 ## Features
 
-1. [ x ] Add new contact
-2. [ x ] Set default country code
-3. [ - ] Import / Export as .vcf (soon)
-4. [ - ] Add contact groups and description (soon)
+- [x] Add new contact
+- [x] Set default country code
+- [-] Import / Export as .vcf (soon)
+- [-] Add contact groups and description (soon)
+
+## License
+
+MIT

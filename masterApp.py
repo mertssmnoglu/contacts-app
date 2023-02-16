@@ -13,8 +13,12 @@ class Application():
         self.title ="Contacts"
         self.contactsFile = "contacts.json"
         self.countriesFile = "lib/countries.json"
+        
+        # Interface
         self.masterApp = Tk()
-        self.masterApp.attributes('-zoomed', True)
+        #self.masterApp.attributes('-zoomed', True)
+        self.masterApp.geometry("700x500")
+        self.masterApp.title("Contact")
         self.topbar = Frame(self.masterApp,bg=self.primaryColor)
         self.topbar.place(relx=0,rely=0,relwidth=1,relheight=0.1)
         self.dateTime = Label(self.topbar, fg="#ffffff",bg=self.primaryColor,text=f"{now.day} / {now.month} / {now.year}", font="Verdana 18 bold")
@@ -27,25 +31,25 @@ class Application():
         self.footer.place(relx=0,rely=0.83,relwidth=1,relheight=0.17)
         self.title = Label(self.topbar, fg="#ffffff",bg=self.primaryColor,text=self.title, font="Verdana 18 bold")
         self.title.pack(side="left")
-        self.contactNameLabel = Label(self.leftbar, text="Enter Name:")
+        self.contactNameLabel = Label(self.leftbar, text="Enter Name:", background="#0d1117", fg="white")
         self.contactNameLabel.pack(anchor="w")
-        self.contactNameEntry = Entry(self.leftbar)
+        self.contactNameEntry = Entry(self.leftbar, background="#B2B2B2", fg="black")
         self.contactNameEntry.pack(anchor="w")
-        self.contactSurnameLabel = Label(self.leftbar, text="Enter Surname:")
+        self.contactSurnameLabel = Label(self.leftbar, text="Enter Surname:", background="#0d1117", fg="white")
         self.contactSurnameLabel.pack(anchor="w")
-        self.contactSurnameEntry = Entry(self.leftbar)
+        self.contactSurnameEntry = Entry(self.leftbar, background="#B2B2B2", fg="black")
         self.contactSurnameEntry.pack(anchor="w")
-        self.contactPhoneLabel = Label(self.leftbar, text="Enter Phone Number:")
+        self.contactPhoneLabel = Label(self.leftbar, text="Enter Phone Number:", background="#0d1117", fg="white")
         self.contactPhoneLabel.pack(anchor="w")
-        self.contactPhoneEntry = Entry(self.leftbar)
+        self.contactPhoneEntry = Entry(self.leftbar, background="#B2B2B2", fg="black")
         self.contactPhoneEntry.pack(anchor="w")
-        self.contactGroupsLabel = Label(self.leftbar, text="Enter Groups:")
+        self.contactGroupsLabel = Label(self.leftbar, text="Enter Groups:", background="#0d1117", fg="white")
         self.contactGroupsLabel.pack(anchor="w")
-        self.contactGroupsEntry = Entry(self.leftbar)
+        self.contactGroupsEntry = Entry(self.leftbar, background="#B2B2B2", fg="black")
         self.contactGroupsEntry.pack(anchor="w")
-        self.setCountryCodeEntry = Entry(self.leftbar)
+        self.setCountryCodeEntry = Entry(self.leftbar, background="#B2B2B2", fg="black")
         self.setCountryCodeEntry.pack(anchor="w",side=BOTTOM)
-        self.setCountryLabel = Label(self.leftbar, text="Set Default Country Code:")
+        self.setCountryLabel = Label(self.leftbar, text="Set Default Country Code:", background="#0d1117", fg="white")
         self.setCountryLabel.pack(anchor="w",side=BOTTOM)
         self.addContactButton = Button(self.footer,text="Add Contact",command=self.addNewContact)
         self.addContactButton.pack(side=LEFT)
@@ -53,12 +57,15 @@ class Application():
         self.setCountryCodeButton.pack(side=LEFT)
         self.helpButton = Button(self.footer, text="Help", command=self.help)
         self.helpButton.pack(side=RIGHT,pady="20")
+        
+    
     def addContactGroup(self,groupName,groupDescription):
         with open(self.contactsFile, "r") as jsonFile:
             data = json.load(jsonFile)
             data["contactGroups"].append({"name":groupName,"description":groupDescription})
         with open(self.contactsFile, "w") as jsonFile:
             json.dump(data, jsonFile, indent=2)
+            
     def setDefaultCountryCode(self):
         defaultCountryCode = self.setCountryCodeEntry.get()
         if defaultCountryCode == '':
@@ -73,20 +80,24 @@ class Application():
                 json.dump(data, jsonFile, indent=2)
             messagebox.showinfo("Country code setted",f"Default Country Code setted {defaultCountryCode}.")
             print(f"Default Country Code setted {defaultCountryCode}.")
+            
     def getCountryCode(self):
         with open(self.contactsFile, "r") as jsonFile:
             countryCode = json.load(jsonFile)
             return countryCode["defaultCountryCode"]
+        
     def increaseId(self):
         with open(self.contactsFile, "r") as jsonFile:
             data = json.load(jsonFile)
             data["newContactId"] = data["newContactId"] +1
         with open(self.contactsFile, "w") as jsonFile:
             json.dump(data, jsonFile, indent=2)
+            
     def getId(self):
         with open(self.contactsFile, "r") as jsonFile:
             data = json.load(jsonFile)
             return data["newContactId"]
+        
     def addNewContact(self):
         contactData = {
             "_id": self.getId(),
@@ -95,38 +106,48 @@ class Application():
             "phoneNumber": self.getCountryCode() + self.contactPhoneEntry.get(),
             "groups":self.contactGroupsEntry.get().split(sep=",")
         }
+        
         if(contactData["groups"] == [""]):
             contactData["groups"] = []
+            
         if(contactData["name"] == ''):
             messagebox.showerror("Oops!", "Name can not be empty.")
+            
         elif(contactData["surname"] == ''):
             messagebox.showerror("Oops!", "Surname can not be empty.")
+            
         elif(self.contactPhoneEntry.get() == ''):
             messagebox.showerror("Oops!", "Phone Number can not be empty.")
+            
         else:
             with open(self.contactsFile, "r") as jsonFile:
                 data = json.load(jsonFile)
                 data["contactList"].append(contactData)
+                
             with open(self.contactsFile, "w") as jsonFile:
                 json.dump(data, jsonFile, indent=2)
+                
             contactBasicInfo=f"{contactData['name'] + ' ' + contactData['surname'].upper()}"
             self.increaseId()
             messagebox.showinfo("New Contact",f"New Contact {contactBasicInfo} added.")
             print(f"New contact {contactBasicInfo} added.")
             self.clear_rightbar()
             self.getContactList()
+            
     def clear_rightbar(self):
         for widgets in self.rightbar.winfo_children():
             widgets.destroy()
+            
     def getContactList(self):
         with open(self.contactsFile, "r") as jsonFile:
             data = json.load(jsonFile)["contactList"]
-            scrollbar = Scrollbar(self.rightbar)
+            scrollbar = Scrollbar(self.rightbar, )
             scrollbar.pack( side = RIGHT, fill = Y )
-            mylist = Listbox(self.rightbar,width=100,yscrollcommand = scrollbar.set)
+            mylist = Listbox(self.rightbar,width=100, height=200, yscrollcommand = scrollbar.set, background="#0d1117", fg="white", font="Verdana 11")
             for i in range (1,len(data)):
                 mylist.insert(END, f"{data[i]['name']} {data[i]['surname']}")
-            mylist.pack()
+            mylist.pack(fill=BOTH)
+            
     def help(self):
         import webbrowser
-        webbrowser.open("https://github.com/mertssmnoglu/contacts-app/issues/new")
+        webbrowser.open("https://github.com/mertssmnoglu/contacts-app/issues")
